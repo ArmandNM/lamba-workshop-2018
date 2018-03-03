@@ -7,7 +7,7 @@ def push(s: MaxStack, value: Int): MaxStack = {
     val newMax = scala.math.max(item, thenMax)
     MaxStack(StackItem(value, newMax) :: s.items)
   }.getOrElse {
-    MaxStack(List(StackItem(value, Integer.MIN_VALUE)))
+    MaxStack(List(StackItem(value, 0)))
   }
 }
 
