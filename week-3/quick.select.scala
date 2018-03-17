@@ -10,21 +10,23 @@ def transition(s: State): State = {
   val leftPartitionLength = leftPartition.length
   val rightPartitionLength = rightPartition.length
 
-  if (s.k  >= leftPartitionLength) {
+  if (leftPartitionLength == 0 && rightPartition.distinct.length == 1) {
+    State(rightPartition.distinct, 1, 1)
+  } else if (s.k  > leftPartitionLength) {
     State(rightPartition, rightPartitionLength, s.k-leftPartitionLength)
   } else {
     State(leftPartition, leftPartitionLength, s.k)
   }
 }
 
-val inputList = List(1, 7, 4, 5, 13, 101)
-val initialState = State(inputList, inputList.length, 3)
+val inputList = List(99, 99)
+val initialState = State(inputList, inputList.length, 1)
 
-Get the result after iterating the whole list
+// Get the result after iterating the whole list
 val kthElement = {
   Stream
     .iterate(initialState)(transition)
-    .dropWhile { case State(_, _, k) => k > 0 }
+    .dropWhile { case State(_, length, _) => length > 1 }
     .head
     .list
     .head
