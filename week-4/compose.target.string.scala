@@ -1,12 +1,17 @@
 case class State(remainingString: List[Char], dp: List[Boolean])
 case class Accumulator(prefix: List[Char], revDP: List[Boolean])
 
-val stringsSet: Set[List[Char]] = Set("one".toList, "cat".toList, "two".toList, "four".toList)
-val targetString: List[Char] = "fouroneone".toList
+val stringsSet: Set[List[Char]] =
+  Set(
+    "one".toList.reverse,
+    "cat".toList.reverse,
+    "two".toList.reverse,
+    "four".toList.reverse
+  )
 
-val initialState: State = State(targetString.toList, List.fill(targetString.length){false})
+val targetString: List[Char] = "fouroneonex".toList
 
-def foldFun(acc: Accumulator, cValue: Char) = {
+def foldLeftFun(acc: Accumulator, cValue: Char): Accumulator = {
   val newPrefix = cValue :: acc.prefix
   if (stringsSet.contains(newPrefix)) {
     Accumulator(newPrefix, true::acc.revDP)
@@ -15,6 +20,26 @@ def foldFun(acc: Accumulator, cValue: Char) = {
   }
 }
 
-def transition(s: State): State = {
+val emptyAcc = Accumulator(List[Char](), List[Boolean]())
+val initialDP = targetString.foldLeft(emptyAcc)(foldLeftFun).revDP.reverse
+val initialState: State = State(targetString.toList, initialDP)
 
+def transition(s: State): State = {
+  val (fst, snd) = s.dp.drop(s.dp.length - s.remainingString.length) span {case d => d == false}
+  val sndPartOfRemainingString = s.remainingString.drop(fst.length + 1)
+  val sndDP = sndPartOfRemainingString.foldLeft(emptyAcc)(foldLeftFun).revDP.reverse
+  val newDP = List.fill(s.dp.length - s.remainingString.length + fst.length){false} ::: List(true) ::: sndDP
+  val reunitedDP = (s.dp, newDP).zipped.map {_ || _}
+  State(sndPartOfRemainingString, reunitedDP)
 }
+
+// Final DP solution for all substrings
+val finalDP = {
+  Stream
+    .iterate(initialState)(transition)
+    .dropWhile { case State(remainingString, _) => remainingString.nonEmpty }
+    .head
+    .dp
+}
+
+val isPossible = finalDP.last == true
