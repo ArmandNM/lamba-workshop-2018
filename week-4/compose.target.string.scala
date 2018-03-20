@@ -1,13 +1,13 @@
-case class State(remainingString: String, dp: List[Boolean])
+case class State(remainingString: List[Char], dp: List[Boolean])
 case class Accumulator(prefix: List[Char], revDP: List[Boolean])
 
-val stringsSet: Set[String] = Set("one", "cat", "two", "four")
-val targetString: String = "fouroneone"
+val stringsSet: Set[List[Char]] = Set("one".toList, "cat".toList, "two".toList, "four".toList)
+val targetString: List[Char] = "fouroneone".toList
 
-val initialState: State = State(targetString, )
+val initialState: State = State(targetString.toList, List.fill(targetString.length){false})
 
-def foldFun(acc: Accumulator, cValue: Char) {
-  newPrefix = cValue :: acc.prefix
+def foldFun(acc: Accumulator, cValue: Char) = {
+  val newPrefix = cValue :: acc.prefix
   if (stringsSet.contains(newPrefix)) {
     Accumulator(newPrefix, true::acc.revDP)
   } else {
@@ -15,4 +15,6 @@ def foldFun(acc: Accumulator, cValue: Char) {
   }
 }
 
-def 
+def transition(s: State): State = {
+
+}
