@@ -1,3 +1,4 @@
+
 class Node(val n: Int, var l: Option[Node] = None, var r: Option[Node] = None) {
   override def toString: String = s" # ${n} # "
 }
@@ -24,20 +25,23 @@ nodeFour.l = Some(nodeSeven)
 nodeTwo.r = Some(nodeEight)
 
 def isBalanced(root: Option[Node]): (Int, Boolean) = {
-  if (root.isEmpty) {
-    (0, true)
-  } else {
-    val (heightLeft, isBalancedLeft) = isBalanced(root.get.l)
-    val (heightRight, isBalancedRight) = isBalanced(root.get.r)
+  root.isEmpty match {
+    case true =>
+      (0, true)
+    case false =>
+      val (heightLeft, isBalancedLeft) = isBalanced(root.get.l)
+      val (heightRight, isBalancedRight) = isBalanced(root.get.r)
 
-    val crtHeight = 1 + math.max(heightLeft, heightRight)
+      val crtHeight = 1 + math.max(heightLeft, heightRight)
 
-    if (math.abs(heightLeft - heightRight) <= 1) {
-      (crtHeight, isBalancedLeft && isBalancedRight)
-    } else {
-      (crtHeight, false)
-    }
+      math.abs(heightLeft - heightRight) <= 1 match {
+        case true =>
+          (crtHeight, isBalancedLeft && isBalancedRight)
+        case false =>
+          (crtHeight, false)
+      }
   }
 }
 
 isBalanced(Some(nodeOne))
+
