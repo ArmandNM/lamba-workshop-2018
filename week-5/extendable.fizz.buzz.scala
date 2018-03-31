@@ -25,10 +25,22 @@ def fizzBuzz(steps: Int, tokens: List[(Int, String)]): List[String] = {
 
   val initialState = State(List[String](), listOfStreamedTokens)
 
-  Stream
-    .iterate(initialState)(transition)
-    .drop(steps)
-    .head
-    .crtAnswer
-    .reverse
+  val stringStream = {
+    Stream
+      .iterate(initialState)(transition)
+      .drop(steps)
+      .head
+      .crtAnswer
+      .reverse
+  }
+
+  val numericStream = {
+    Stream
+      .from(1)
+      .map(_.toString)
+      .take(steps)
+      .toList
+  }
+
+  stringStream.zip(numericStream).map { case (fst, snd) => if (fst.isEmpty) snd else fst}
 }
