@@ -3,13 +3,13 @@ case class Accumulator(prefix: List[Char], revDP: List[Boolean])
 
 val stringsSet: Set[List[Char]] =
   Set(
-    "one".toList.reverse,
-    "cat".toList.reverse,
-    "two".toList.reverse,
-    "four".toList.reverse
-  )
+    "one",
+    "cat",
+    "two",
+    "four"
+  ).map { case str => str.toList.reverse }
 
-val targetString: List[Char] = "fouroneonex".toList
+val targetString: List[Char] = "fouroneone".toList
 
 def foldLeftFun(acc: Accumulator, cValue: Char): Accumulator = {
   val newPrefix = cValue :: acc.prefix
@@ -42,4 +42,4 @@ val finalDP = {
     .dp
 }
 
-val isPossible = finalDP.last == true
+val isPossible = finalDP.last
